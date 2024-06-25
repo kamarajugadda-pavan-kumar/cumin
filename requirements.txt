@@ -1,0 +1,83 @@
+- users
+    - admin (all permisssions)
+    - member (are part of team and can add , edit and collaborate on work)
+    - viewers (can  only view and comment on teams work)
+
+- issues (Each issue is labeled as scrum - issueId)
+    - epic
+        - summary
+        - description
+        - status
+        - assignee
+        - start date
+        - end date
+        - reporter
+        - child issues (userStory, task , bug) 
+    - user story
+        - summary
+        - description
+        - status
+        - assignee
+        - labels
+        - parent
+        - sprint
+        - story point estimate
+        - reporter
+        - child issues (subtask)
+    - bug
+        - summary
+        - description
+        - status
+        - assignee
+        - labels
+        - parent
+        - sprint
+        - story point estimate
+        - reporter
+        - child issues (subtask)
+    - task
+        - summary
+        - description
+        - status
+        - assignee
+        - labels
+        - parent
+        - sprint
+        - story point estimate
+        - reporter
+        - child issues (subtask)
+    - subtask
+        - summary
+        - description
+        - status
+        - assignee
+        - labels
+        - parent
+        - sprint
+        - story point estimate
+        - reporter
+
+- status of issue (Enum value)
+    - to do 
+    - in progres
+    - completed
+
+- backlog board (multiple sprints can be created, sprints can be modified)
+    - sprints
+    - backlogs (user stories, tasks and bugs)
+
+- kanban board (all the issues created in the backlog board are reflected in this)
+    - status will be available as columns
+
+- teams
+    - create team
+    - invite a user to collaborate
+    - assign user to a team
+
+- List (This shows the List of issues in a tree format)
+    - In First layer issues without a parent are shown 
+    - The children to the first layer issue are shown when a particular issue is expanded
+
+- 
+
+    
