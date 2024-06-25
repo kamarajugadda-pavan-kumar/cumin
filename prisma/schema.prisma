@@ -17,5 +17,54 @@ model User{
   id Int @id @default(autoincrement())
   username String @unique
   password String
+  assignedIssues Issue[]  @relation("IssueAssignees")
+  reportedIssues Issue[]  @relation("IssueReporters")
 }
 
+enum IssueType {
+  EPIC
+  USER_STORY
+  BUG
+  TASK
+  SUBTASK
+}
+
+enum Status {
+  TO_DO
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Issue {
+  id            Int            @id @default(autoincrement())
+  summary       String
+  description   String
+  status        Status
+  assigneeId    Int
+  assignee      User           @relation("IssueAssignees", fields: [assigneeId], references: [id])
+  startDate     DateTime?
+  endDate       DateTime?
+  reporterId    Int
+  reporter      User           @relation("IssueReporters", fields: [reporterId], references: [id])
+  childIssues   Issue[]        @relation("IssueHierarchy")
+  parentId      Int?
+  parent        Issue?         @relation("IssueHierarchy", fields: [parentId], references: [id])
+  sprint        String?
+  storyPointEstimate Int?
+  labels        IssueLabel[]
+}
+
+model Label {
+  id    Int          @id @default(autoincrement())
+  name  String       @unique
+  issues IssueLabel[]
+}
+
+model IssueLabel {
+  id       Int    @id @default(autoincrement())
+  issueId  Int
+  labelId  Int
+  issue    Issue  @relation(fields: [issueId], references: [id])
+  label    Label  @relation(fields: [labelId], references: [id])
+  @@unique([issueId, labelId])
+}
