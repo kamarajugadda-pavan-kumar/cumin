@@ -14,11 +14,14 @@ datasource db {
 }
 
 model User {
-  id             Int     @id @default(autoincrement())
-  username       String  @unique
+  id             String   @id @default(uuid())
+  username       String   @unique
   password       String
-  assignedIssues Issue[] @relation("IssueAssignees")
-  reportedIssues Issue[] @relation("IssueReporters")
+  assignedIssues Issue[]  @relation("IssueAssignees")
+  reportedIssues Issue[]  @relation("IssueReporters")
+  Sprint         Sprint[]
+  Team           Team?    @relation(fields: [teamId], references: [id])
+  teamId         String?
 }
 
 enum IssueType {
@@ -36,55 +39,48 @@ enum Status {
 }
 
 model Issue {
-  id                 Int          @id @default(autoincrement())
+  id                 Int       @id @default(autoincrement())
+  type               IssueType
   summary            String
   description        String
   status             Status
-  assigneeId         Int
-  assignee           User         @relation("IssueAssignees", fields: [assigneeId], references: [id])
+  assigneeId         String
+  assignee           User      @relation("IssueAssignees", fields: [assigneeId], references: [id])
   startDate          DateTime?
   endDate            DateTime?
-  reporterId         Int
-  reporter           User         @relation("IssueReporters", fields: [reporterId], references: [id])
-  childIssues        Issue[]      @relation("IssueHierarchy")
+  reporterId         String
+  reporter           User      @relation("IssueReporters", fields: [reporterId], references: [id])
+  childIssues        Issue[]   @relation("IssueHierarchy")
   parentId           Int?
-  parent             Issue?       @relation("IssueHierarchy", fields: [parentId], references: [id])
+  parent             Issue?    @relation("IssueHierarchy", fields: [parentId], references: [id])
   sprint             String?
   storyPointEstimate Int?
-  labels             IssueLabel[]
+  labels             Label[]
+  Sprint             Sprint?   @relation(fields: [sprintId], references: [id])
+  sprintId           String?
 }
 
 model Label {
-  id     Int          @id @default(autoincrement())
-  name   String       @unique
-  issues IssueLabel[]
-}
-
-model IssueLabel {
-  id      Int   @id @default(autoincrement())
+  id      String @id @default(uuid())
+  name    String @unique
+  issue   Issue  @relation(fields: [issueId], references: [id])
   issueId Int
-  labelId Int
-  issue   Issue @relation(fields: [issueId], references: [id])
-  label   Label @relation(fields: [labelId], references: [id])
-
-  @@unique([issueId, labelId])
 }
 
 model Sprint {
-  id         Int      @id @default(autoincrement())
-  name       String
-  startDate  DateTime
-  endDate    DateTime
-  status     String
-  issues     Issue[]
-  createdBy  Int
-  creator    User     @relation(fields: [createdBy], references: [id])
+  id        String   @id @default(uuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  status    String
+  issues    Issue[]
+  createdBy String
+  creator   User     @relation(fields: [createdBy], references: [id])
 }
 
-model SprintIssue {
-  id Int @id @default(autoincrement())
-  sprintId Int 
-  issueId Int 
-  sprint Sprint @relation(fields:[sprintId],references:[id])
-  issue Issue @relation(fields:[issueId],references:[id])
+model Team {
+  id       String @id @default(uuid())
+  name     String
+  memberId String
+  members  User[]
 }
